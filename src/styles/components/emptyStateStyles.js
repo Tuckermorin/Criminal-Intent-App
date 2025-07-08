@@ -1,6 +1,6 @@
 // src/styles/components/emptyStateStyles.js
 import { StyleSheet } from 'react-native';
-import { spacing, fontSize } from '../globalStyles';
+import { fontSize, spacing } from '../globalStyles';
 
 export const createEmptyStateStyles = (theme) => StyleSheet.create({
     container: {
