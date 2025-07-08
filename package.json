@@ -1,6 +1,6 @@
 {
   "name": "criminal-intent-app",
-  "main": "expo-router/entry",
+  "main": "App.js",
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
@@ -27,7 +27,6 @@
     "expo-image": "~2.3.2",
     "expo-image-picker": "~16.1.4",
     "expo-linking": "~7.1.7",
-    "expo-router": "~5.1.3",
     "expo-splash-screen": "~0.30.10",
     "expo-status-bar": "~2.2.3",
     "expo-symbols": "~0.4.5",
