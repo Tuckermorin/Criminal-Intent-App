@@ -1,18 +1,11 @@
-// App.js
+// App.js - Minimal test version
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { ThemeProvider } from './src/context/ThemeContext';
-import AppNavigator from './src/navigation/AppNavigator';
-
-const Stack = createNativeStackNavigator();
+import { Text, View } from 'react-native';
 
 export default function App() {
     return (
-        <ThemeProvider>
-            <NavigationContainer>
-                <AppNavigator />
-            </NavigationContainer>
-        </ThemeProvider>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text>Hello World - App is working!</Text>
+        </View>
     );
 }
