@@ -1,24 +1,41 @@
-// Minimal working version
+// App entry point wired up with navigation and theming
+import 'react-native-gesture-handler';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { StatusBar } from 'expo-status-bar';
+
+import { ThemeProvider, useTheme } from './src/context/ThemeContext';
+import AppNavigator from './src/navigation/AppNavigator';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Back to basics - working!</Text>
-    </View>
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
   );
 }
+function AppContent() {
+  const { theme } = useTheme();
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-  },
-  text: {
-    fontSize: 18,
-    color: '#333',
-  },
-});
+  const navigationTheme = {
+    dark: theme.type === 'dark',
+    colors: {
+      primary: theme.colors.primary,
+      background: theme.colors.background,
+      card: theme.colors.card,
+      text: theme.colors.text,
+      border: theme.colors.border,
+      notification: theme.colors.primary,
+    },
+  };
+
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <NavigationContainer theme={navigationTheme}>
+        <StatusBar style={theme.type === 'dark' ? 'light' : 'dark'} />
+        <AppNavigator />
+      </NavigationContainer>
+    </GestureHandlerRootView>
+  );
+}
