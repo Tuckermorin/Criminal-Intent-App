@@ -28,6 +28,7 @@ export const createCrimeItemStyles = (theme) => StyleSheet.create({
     },
 
     solvedIcon: {
+        fontSize: fontSize.lg,
         marginLeft: spacing.sm,
     },
 

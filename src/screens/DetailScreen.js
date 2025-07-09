@@ -1,4 +1,4 @@
-// src/screens/DetailScreen.js - No Icons Version
+// src/screens/DetailScreen.js - With Delete Functionality
 import * as ImagePicker from 'expo-image-picker';
 import React, { useEffect, useState } from 'react';
 import {
@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import DatePickerModal from '../components/DatePickerModal';
 import { useTheme } from '../context/ThemeContext';
-import { createCrime, getCrimeById, saveCrime } from '../storage/crimeStorage';
+import { createCrime, deleteCrime, getCrimeById, saveCrime } from '../storage/crimeStorage';
 import { createDetailScreenStyles } from '../styles/components/detailScreenStyles';
 
 export default function DetailScreen({ route, navigation }) {
@@ -23,7 +23,11 @@ export default function DetailScreen({ route, navigation }) {
     const [crime, setCrime] = useState(createCrime());
     const [isLoading, setIsLoading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
     const [showDatePicker, setShowDatePicker] = useState(false);
+
+    // Check if this is an existing crime (has crimeId) or new crime
+    const isExistingCrime = crimeId !== null;
 
     useEffect(() => {
         if (crimeId) {
@@ -67,6 +71,43 @@ export default function DetailScreen({ route, navigation }) {
             Alert.alert('Error', 'Failed to save crime');
         } finally {
             setIsSaving(false);
+        }
+    };
+
+    const handleDelete = async () => {
+        Alert.alert(
+            'Delete Crime',
+            'Are you sure you want to delete this crime? This action cannot be undone.',
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Delete',
+                    style: 'destructive',
+                    onPress: confirmDelete,
+                },
+            ]
+        );
+    };
+
+    const confirmDelete = async () => {
+        setIsDeleting(true);
+        try {
+            const success = await deleteCrime(crimeId);
+            if (success) {
+                Alert.alert('Success', 'Crime deleted successfully', [
+                    { text: 'OK', onPress: () => navigation.goBack() }
+                ]);
+            } else {
+                Alert.alert('Error', 'Failed to delete crime');
+            }
+        } catch (error) {
+            console.error('Error deleting crime:', error);
+            Alert.alert('Error', 'Failed to delete crime');
+        } finally {
+            setIsDeleting(false);
         }
     };
 
@@ -223,13 +264,27 @@ export default function DetailScreen({ route, navigation }) {
                 <TouchableOpacity
                     style={[globalStyles.button, styles.saveButton]}
                     onPress={handleSave}
-                    disabled={isSaving}
+                    disabled={isSaving || isDeleting}
                     activeOpacity={0.8}
                 >
                     <Text style={globalStyles.buttonText}>
                         {isSaving ? 'Saving...' : 'SAVE'}
                     </Text>
                 </TouchableOpacity>
+
+                {/* Delete Button - Only show for existing crimes */}
+                {isExistingCrime && (
+                    <TouchableOpacity
+                        style={[styles.deleteButton]}
+                        onPress={handleDelete}
+                        disabled={isSaving || isDeleting}
+                        activeOpacity={0.8}
+                    >
+                        <Text style={styles.deleteButtonText}>
+                            {isDeleting ? 'Deleting...' : 'DELETE CRIME'}
+                        </Text>
+                    </TouchableOpacity>
+                )}
             </ScrollView>
 
             {/* Date Picker Modal */}

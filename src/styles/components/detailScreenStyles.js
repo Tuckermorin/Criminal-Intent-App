@@ -164,4 +164,28 @@ export const createDetailScreenStyles = (theme) => StyleSheet.create({
         color: '#FFFFFF',
         fontWeight: 'bold',
     },
+    deleteButton: {
+        backgroundColor: theme.colors.error,
+        paddingVertical: spacing.md,
+        paddingHorizontal: spacing.lg,
+        borderRadius: borderRadius.md,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: spacing.md,
+        marginBottom: spacing.xxl,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+        elevation: 3,
+    },
+
+    deleteButtonText: {
+        color: '#FFFFFF',
+        fontSize: fontSize.md,
+        fontWeight: '600',
+    },
 });
