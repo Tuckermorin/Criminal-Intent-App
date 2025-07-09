@@ -1,8 +1,7 @@
-// src/screens/DetailScreen.js - With Delete Functionality
+// src/screens/DetailScreen.js - Professional UI (No Alerts)
 import * as ImagePicker from 'expo-image-picker';
 import React, { useEffect, useState } from 'react';
 import {
-    Alert,
     Image,
     ScrollView,
     Text,
@@ -10,7 +9,9 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
+import ConfirmationModal from '../components/ConfirmationModal';
 import DatePickerModal from '../components/DatePickerModal';
+import ToastNotification from '../components/ToastNotification';
 import { useTheme } from '../context/ThemeContext';
 import { createCrime, deleteCrime, getCrimeById, saveCrime } from '../storage/crimeStorage';
 import { createDetailScreenStyles } from '../styles/components/detailScreenStyles';
@@ -25,6 +26,22 @@ export default function DetailScreen({ route, navigation }) {
     const [isSaving, setIsSaving] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [showDatePicker, setShowDatePicker] = useState(false);
+    
+    // Toast notification state
+    const [toast, setToast] = useState({
+        visible: false,
+        message: '',
+        type: 'success'
+    });
+
+    // Confirmation modal state
+    const [confirmModal, setConfirmModal] = useState({
+        visible: false,
+        title: '',
+        message: '',
+        onConfirm: () => {},
+        type: 'default'
+    });
 
     // Check if this is an existing crime (has crimeId) or new crime
     const isExistingCrime = crimeId !== null;
@@ -35,6 +52,34 @@ export default function DetailScreen({ route, navigation }) {
         }
     }, [crimeId]);
 
+    const showToast = (message, type = 'success') => {
+        setToast({ visible: true, message, type });
+    };
+
+    const hideToast = () => {
+        setToast({ visible: false, message: '', type: 'success' });
+    };
+
+    const showConfirmation = (title, message, onConfirm, type = 'default') => {
+        setConfirmModal({
+            visible: true,
+            title,
+            message,
+            onConfirm,
+            type
+        });
+    };
+
+    const hideConfirmation = () => {
+        setConfirmModal({
+            visible: false,
+            title: '',
+            message: '',
+            onConfirm: () => {},
+            type: 'default'
+        });
+    };
+
     const loadCrime = async () => {
         setIsLoading(true);
         try {
@@ -44,7 +89,7 @@ export default function DetailScreen({ route, navigation }) {
             }
         } catch (error) {
             console.error('Error loading crime:', error);
-            Alert.alert('Error', 'Failed to load crime data');
+            showToast('Failed to load crime data', 'error');
         } finally {
             setIsLoading(false);
         }
@@ -52,7 +97,7 @@ export default function DetailScreen({ route, navigation }) {
 
     const handleSave = async () => {
         if (!crime.title.trim()) {
-            Alert.alert('Error', 'Please enter a title for the crime');
+            showToast('Please enter a title for the crime', 'warning');
             return;
         }
 
@@ -60,52 +105,48 @@ export default function DetailScreen({ route, navigation }) {
         try {
             const success = await saveCrime(crime);
             if (success) {
-                Alert.alert('Success', 'Crime saved successfully', [
-                    { text: 'OK', onPress: () => navigation.goBack() }
-                ]);
+                showToast('Crime saved successfully!', 'success');
+                // Navigate back after a short delay to show the toast
+                setTimeout(() => {
+                    navigation.goBack();
+                }, 1500);
             } else {
-                Alert.alert('Error', 'Failed to save crime');
+                showToast('Failed to save crime', 'error');
             }
         } catch (error) {
             console.error('Error saving crime:', error);
-            Alert.alert('Error', 'Failed to save crime');
+            showToast('Failed to save crime', 'error');
         } finally {
             setIsSaving(false);
         }
     };
 
-    const handleDelete = async () => {
-        Alert.alert(
+    const handleDelete = () => {
+        showConfirmation(
             'Delete Crime',
             'Are you sure you want to delete this crime? This action cannot be undone.',
-            [
-                {
-                    text: 'Cancel',
-                    style: 'cancel',
-                },
-                {
-                    text: 'Delete',
-                    style: 'destructive',
-                    onPress: confirmDelete,
-                },
-            ]
+            confirmDelete,
+            'destructive'
         );
     };
 
     const confirmDelete = async () => {
+        hideConfirmation();
         setIsDeleting(true);
         try {
             const success = await deleteCrime(crimeId);
             if (success) {
-                Alert.alert('Success', 'Crime deleted successfully', [
-                    { text: 'OK', onPress: () => navigation.goBack() }
-                ]);
+                showToast('Crime deleted successfully', 'success');
+                // Navigate back after a short delay
+                setTimeout(() => {
+                    navigation.goBack();
+                }, 1500);
             } else {
-                Alert.alert('Error', 'Failed to delete crime');
+                showToast('Failed to delete crime', 'error');
             }
         } catch (error) {
             console.error('Error deleting crime:', error);
-            Alert.alert('Error', 'Failed to delete crime');
+            showToast('Failed to delete crime', 'error');
         } finally {
             setIsDeleting(false);
         }
@@ -133,7 +174,7 @@ export default function DetailScreen({ route, navigation }) {
             const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
             if (status !== 'granted') {
-                Alert.alert('Permission Required', 'Sorry, we need camera roll permissions to select photos.');
+                showToast('Camera roll permission required to select photos', 'warning');
                 return;
             }
 
@@ -146,10 +187,11 @@ export default function DetailScreen({ route, navigation }) {
 
             if (!result.canceled && result.assets[0]) {
                 setCrime(prev => ({ ...prev, photoUri: result.assets[0].uri }));
+                showToast('Photo added successfully', 'success');
             }
         } catch (error) {
             console.error('Error picking image:', error);
-            Alert.alert('Error', 'Failed to select image');
+            showToast('Failed to select image', 'error');
         }
     };
 
@@ -173,6 +215,25 @@ export default function DetailScreen({ route, navigation }) {
 
     return (
         <View style={[globalStyles.container]}>
+            {/* Toast Notification */}
+            <ToastNotification
+                visible={toast.visible}
+                message={toast.message}
+                type={toast.type}
+                onHide={hideToast}
+            />
+
+            {/* Confirmation Modal */}
+            <ConfirmationModal
+                visible={confirmModal.visible}
+                title={confirmModal.title}
+                message={confirmModal.message}
+                onConfirm={confirmModal.onConfirm}
+                onCancel={hideConfirmation}
+                type={confirmModal.type}
+                confirmText={confirmModal.type === 'destructive' ? 'Delete' : 'Confirm'}
+            />
+
             <ScrollView
                 style={styles.scrollView}
                 contentContainerStyle={styles.scrollContent}
