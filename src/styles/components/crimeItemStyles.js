@@ -1,6 +1,6 @@
 // src/styles/components/crimeItemStyles.js
 import { StyleSheet } from 'react-native';
-import { spacing, fontSize } from '../globalStyles';
+import { fontSize, spacing } from '../globalStyles';
 
 export const createCrimeItemStyles = (theme) => StyleSheet.create({
     container: {
@@ -54,5 +54,17 @@ export const createCrimeItemStyles = (theme) => StyleSheet.create({
         marginLeft: spacing.md,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    // Add these new styles to your crimeItemStyles.js
+    solvedText: {
+        fontSize: fontSize.xs,
+        color: theme.colors.primary,
+        fontWeight: 'bold',
+        marginLeft: spacing.sm,
+    },
+
+    arrowText: {
+        fontSize: fontSize.lg,
+        color: theme.colors.textSecondary,
     },
 });

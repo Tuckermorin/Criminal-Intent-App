@@ -1,8 +1,8 @@
-// src/screens/SettingsScreen.js
+// src/screens/SettingsScreen.js - No Icons Version
 import React from 'react';
-import { View, Text, ScrollView } from 'react-native';
-import { useTheme } from '../context/ThemeContext';
+import { ScrollView, Text, View } from 'react-native';
 import ThemeSelector from '../components/ThemeSelector';
+import { useTheme } from '../context/ThemeContext';
 import { createSettingsScreenStyles } from '../styles/components/settingsScreenStyles';
 
 export default function SettingsScreen() {

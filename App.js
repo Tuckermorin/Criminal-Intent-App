@@ -1,41 +1,108 @@
-// App entry point wired up with navigation and theming
-import 'react-native-gesture-handler';
-import React from 'react';
+// App.js - Complete Criminal Intent App (No Icons)
 import { NavigationContainer } from '@react-navigation/native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { StatusBar } from 'expo-status-bar';
-
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React from 'react';
+import { AppRegistry, Text, TouchableOpacity } from 'react-native';
 import { ThemeProvider, useTheme } from './src/context/ThemeContext';
-import AppNavigator from './src/navigation/AppNavigator';
+import DetailScreen from './src/screens/DetailScreen';
+import IndexScreen from './src/screens/IndexScreen';
+import SettingsScreen from './src/screens/SettingsScreen';
 
-export default function App() {
+const Stack = createNativeStackNavigator();
+
+function AppNavigator() {
+  const { theme } = useTheme();
+  
+  return (
+    <Stack.Navigator
+      initialRouteName="Index"
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: theme.colors.primary,
+        },
+        headerTintColor: '#FFFFFF',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}
+    >
+      <Stack.Screen 
+        name="Index" 
+        component={IndexScreen}
+        options={({ navigation }) => ({
+          title: 'Criminal Intent',
+          // In the Index screen headerRight:
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                console.log('Settings button pressed from Index');
+                navigation.navigate('Settings');
+              }}
+              style={{ marginRight: 15 }}
+            >
+              <Text style={{ color: '#FFFFFF', fontSize: 16 }}>⚙️</Text>
+            </TouchableOpacity>
+          ),
+
+          // In the Detail screen headerRight:
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                console.log('Settings button pressed from Detail');
+                navigation.navigate('Settings');
+              }}
+              style={{ marginRight: 15 }}
+            >
+              <Text style={{ color: '#FFFFFF', fontSize: 16 }}>⚙️</Text>
+            </TouchableOpacity>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Detail', { crimeId: null })}
+              style={{ marginLeft: 15 }}
+            >
+              <Text style={{ color: '#FFFFFF', fontSize: 18 }}>+</Text>
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      
+      <Stack.Screen 
+        name="Detail" 
+        component={DetailScreen}
+        options={({ navigation }) => ({
+          title: 'Crime Detail',
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Settings')}
+              style={{ marginRight: 15 }}
+            >
+              <Text style={{ color: '#FFFFFF', fontSize: 16 }}>⚙️</Text>
+            </TouchableOpacity>
+          ),
+        })}
+      />
+
+      <Stack.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{
+          title: 'Settings',
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function App() {
   return (
     <ThemeProvider>
-      <AppContent />
+      <NavigationContainer>
+        <AppNavigator />
+      </NavigationContainer>
     </ThemeProvider>
   );
 }
-function AppContent() {
-  const { theme } = useTheme();
 
-  const navigationTheme = {
-    dark: theme.type === 'dark',
-    colors: {
-      primary: theme.colors.primary,
-      background: theme.colors.background,
-      card: theme.colors.card,
-      text: theme.colors.text,
-      border: theme.colors.border,
-      notification: theme.colors.primary,
-    },
-  };
-
-  return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <NavigationContainer theme={navigationTheme}>
-        <StatusBar style={theme.type === 'dark' ? 'light' : 'dark'} />
-        <AppNavigator />
-      </NavigationContainer>
-    </GestureHandlerRootView>
-  );
-}
+AppRegistry.registerComponent('main', () => App);
+export default App;

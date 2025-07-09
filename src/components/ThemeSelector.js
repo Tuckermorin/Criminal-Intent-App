@@ -1,7 +1,6 @@
-// src/components/ThemeSelector.js
+// src/components/ThemeSelector.js - No Icons Version
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 import { createThemeSelectorStyles } from '../styles/components/themeSelectorStyles';
 
@@ -60,12 +59,7 @@ export default function ThemeSelector() {
                 </View>
 
                 {isSelected && (
-                    <Ionicons
-                        name="checkmark-circle"
-                        size={24}
-                        color={theme.colors.primary}
-                        style={styles.checkIcon}
-                    />
+                    <Text style={styles.checkIcon}>✓</Text>
                 )}
             </TouchableOpacity>
         );

@@ -1,19 +1,18 @@
-// src/screens/DetailScreen.js
-import React, { useState, useEffect } from 'react';
+// src/screens/DetailScreen.js - No Icons Version
+import * as ImagePicker from 'expo-image-picker';
+import React, { useEffect, useState } from 'react';
 import {
-    View,
+    Alert,
+    Image,
+    ScrollView,
     Text,
     TextInput,
     TouchableOpacity,
-    ScrollView,
-    Alert,
-    Image
+    View
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import * as ImagePicker from 'expo-image-picker';
-import { useTheme } from '../context/ThemeContext';
-import { getCrimeById, saveCrime, createCrime } from '../storage/crimeStorage';
 import DatePickerModal from '../components/DatePickerModal';
+import { useTheme } from '../context/ThemeContext';
+import { createCrime, getCrimeById, saveCrime } from '../storage/crimeStorage';
 import { createDetailScreenStyles } from '../styles/components/detailScreenStyles';
 
 export default function DetailScreen({ route, navigation }) {
@@ -148,7 +147,7 @@ export default function DetailScreen({ route, navigation }) {
                                 onPress={handleImagePicker}
                                 activeOpacity={0.7}
                             >
-                                <Ionicons name="camera" size={24} color="#FFFFFF" />
+                                <Text style={styles.photoButtonText}>📷</Text>
                             </TouchableOpacity>
                         </View>
                     ) : (
@@ -157,7 +156,7 @@ export default function DetailScreen({ route, navigation }) {
                             onPress={handleImagePicker}
                             activeOpacity={0.7}
                         >
-                            <Ionicons name="camera" size={40} color={theme.colors.textSecondary} />
+                            <Text style={styles.photoPlaceholderIcon}>📷</Text>
                             <Text style={styles.photoPlaceholderText}>Add Photo</Text>
                         </TouchableOpacity>
                     )}
@@ -200,7 +199,7 @@ export default function DetailScreen({ route, navigation }) {
                         <Text style={styles.dateButtonText}>
                             {formatDateForDisplay(crime.date)}
                         </Text>
-                        <Ionicons name="calendar" size={20} color="#FFFFFF" />
+                        <Text style={styles.dateButtonIcon}>📅</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -213,7 +212,7 @@ export default function DetailScreen({ route, navigation }) {
                     >
                         <View style={[styles.checkbox, crime.solved && styles.checkboxChecked]}>
                             {crime.solved && (
-                                <Ionicons name="checkmark" size={16} color="#FFFFFF" />
+                                <Text style={styles.checkmarkText}>✓</Text>
                             )}
                         </View>
                         <Text style={styles.checkboxLabel}>Solved</Text>

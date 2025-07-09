@@ -1,7 +1,6 @@
-// src/components/CrimeListItem.js
+// src/components/CrimeListItem.js - No Icons Version
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 import { createCrimeItemStyles } from '../styles/components/crimeItemStyles';
 
@@ -39,12 +38,7 @@ export default function CrimeListItem({ crime, onPress }) {
                         {crime.title || 'Untitled Crime'}
                     </Text>
                     {crime.solved && (
-                        <Ionicons
-                            name="hand-left"
-                            size={20}
-                            color={theme.colors.primary}
-                            style={styles.solvedIcon}
-                        />
+                        <Text style={styles.solvedText}>✓ SOLVED</Text>
                     )}
                 </View>
 
@@ -64,11 +58,7 @@ export default function CrimeListItem({ crime, onPress }) {
             </View>
 
             <View style={styles.rightSection}>
-                <Ionicons
-                    name="chevron-forward"
-                    size={20}
-                    color={theme.colors.textSecondary}
-                />
+                <Text style={styles.arrowText}>→</Text>
             </View>
         </TouchableOpacity>
     );
