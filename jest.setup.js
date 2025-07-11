@@ -91,9 +91,6 @@ global.fetch = jest.fn(() =>
   })
 );
 
-// // Mock React Native components that might cause issues
-// jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
-
 // Silence specific React warnings in tests
 const originalError = console.error;
 beforeAll(() => {
