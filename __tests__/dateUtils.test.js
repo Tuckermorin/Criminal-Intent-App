@@ -1,11 +1,19 @@
-// __tests__/utils/dateUtils.test.js
+// __tests__/dateUtils.test.js - Fixed import path
 import {
     formatDateForDisplay,
     formatDateForList,
     formatTimeForList,
     getRelativeTime,
     isToday
-} from '../../src/utils/dateUtils';
+} from '../src/utils/dateUtils';
+
+import {
+    canSaveCrime,
+    getCrimeValidationMessage,
+    sanitizeCrimeData,
+    validateCrime,
+    validateCrimeTitle
+} from '../src/utils/crimeValidation';
 
 describe('dateUtils', () => {
   // Mock console.error to avoid noise in test output
@@ -155,15 +163,6 @@ describe('dateUtils', () => {
     });
   });
 });
-
-// __tests__/utils/crimeValidation.test.js
-import {
-    canSaveCrime,
-    getCrimeValidationMessage,
-    sanitizeCrimeData,
-    validateCrime,
-    validateCrimeTitle
-} from '../../src/utils/crimeValidation';
 
 describe('crimeValidation', () => {
   describe('validateCrime', () => {

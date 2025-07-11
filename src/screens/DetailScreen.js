@@ -1,4 +1,4 @@
-// src/screens/DetailScreen.js - Professional UI (No Alerts)
+// src/screens/DetailScreen.js - Updated to use extracted validation utilities
 import * as ImagePicker from 'expo-image-picker';
 import React, { useEffect, useState } from 'react';
 import {
@@ -15,6 +15,13 @@ import ToastNotification from '../components/ToastNotification';
 import { useTheme } from '../context/ThemeContext';
 import { createCrime, deleteCrime, getCrimeById, saveCrime } from '../storage/crimeStorage';
 import { createDetailScreenStyles } from '../styles/components/detailScreenStyles';
+import {
+    canSaveCrime,
+    getCrimeValidationMessage,
+    sanitizeCrimeData,
+    validateCrimeTitle
+} from '../utils/crimeValidation';
+import { formatDateForDisplay } from '../utils/dateUtils';
 
 export default function DetailScreen({ route, navigation }) {
     const { crimeId } = route.params;
@@ -26,6 +33,7 @@ export default function DetailScreen({ route, navigation }) {
     const [isSaving, setIsSaving] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [showDatePicker, setShowDatePicker] = useState(false);
+    const [titleError, setTitleError] = useState(null);
     
     // Toast notification state
     const [toast, setToast] = useState({
@@ -96,14 +104,24 @@ export default function DetailScreen({ route, navigation }) {
     };
 
     const handleSave = async () => {
-        if (!crime.title.trim()) {
-            showToast('Please enter a title for the crime', 'warning');
+        // Sanitize the crime data before validation
+        const sanitizedCrime = sanitizeCrimeData(crime);
+        
+        if (!sanitizedCrime) {
+            showToast('Invalid crime data', 'error');
+            return;
+        }
+
+        // Check if crime can be saved
+        if (!canSaveCrime(sanitizedCrime)) {
+            const validationMessage = getCrimeValidationMessage(sanitizedCrime);
+            showToast(validationMessage, 'warning');
             return;
         }
 
         setIsSaving(true);
         try {
-            const success = await saveCrime(crime);
+            const success = await saveCrime(sanitizedCrime);
             if (success) {
                 showToast('Crime saved successfully!', 'success');
                 // Navigate back after a short delay to show the toast
@@ -154,6 +172,10 @@ export default function DetailScreen({ route, navigation }) {
 
     const handleTitleChange = (text) => {
         setCrime(prev => ({ ...prev, title: text }));
+        
+        // Validate title in real-time
+        const titleValidation = validateCrimeTitle(text);
+        setTitleError(titleValidation.isValid ? null : titleValidation.error);
     };
 
     const handleDetailsChange = (text) => {
@@ -193,16 +215,6 @@ export default function DetailScreen({ route, navigation }) {
             console.error('Error picking image:', error);
             showToast('Failed to select image', 'error');
         }
-    };
-
-    const formatDateForDisplay = (dateString) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-        });
     };
 
     if (isLoading) {
@@ -268,12 +280,21 @@ export default function DetailScreen({ route, navigation }) {
                 <View style={styles.section}>
                     <Text style={styles.label}>Title</Text>
                     <TextInput
-                        style={[globalStyles.input, styles.titleInput]}
+                        style={[
+                            globalStyles.input, 
+                            styles.titleInput,
+                            titleError && { borderColor: theme.colors.error }
+                        ]}
                         value={crime.title}
                         onChangeText={handleTitleChange}
                         placeholder="Enter crime title"
                         placeholderTextColor={theme.colors.placeholder}
                     />
+                    {titleError && (
+                        <Text style={{ color: theme.colors.error, fontSize: 14, marginTop: 4 }}>
+                            {titleError}
+                        </Text>
+                    )}
                 </View>
 
                 {/* Details Section */}

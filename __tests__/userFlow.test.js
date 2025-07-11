@@ -1,9 +1,9 @@
-// __tests__/userFlow.test.js
+// __tests__/userFlow.test.js - Fixed import paths
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import React from 'react';
 
-// Import your components
+// Import your components - FIXED PATHS
 import { ThemeProvider } from '../src/context/ThemeContext';
 import DetailScreen from '../src/screens/DetailScreen';
 import IndexScreen from '../src/screens/IndexScreen';

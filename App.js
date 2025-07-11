@@ -31,27 +31,11 @@ function AppNavigator() {
         component={IndexScreen}
         options={({ navigation }) => ({
           title: 'Criminal Intent',
-          // In the Index screen headerRight:
           headerRight: () => (
             <TouchableOpacity
-              onPress={() => {
-                console.log('Settings button pressed from Index');
-                navigation.navigate('Settings');
-              }}
+              onPress={() => navigation.navigate('Settings')}
               style={{ marginRight: 15 }}
-            >
-              <Text style={{ color: '#FFFFFF', fontSize: 16 }}>⚙️</Text>
-            </TouchableOpacity>
-          ),
-
-          // In the Detail screen headerRight:
-          headerRight: () => (
-            <TouchableOpacity
-              onPress={() => {
-                console.log('Settings button pressed from Detail');
-                navigation.navigate('Settings');
-              }}
-              style={{ marginRight: 15 }}
+              testID="settings-button"
             >
               <Text style={{ color: '#FFFFFF', fontSize: 16 }}>⚙️</Text>
             </TouchableOpacity>
@@ -60,6 +44,7 @@ function AppNavigator() {
             <TouchableOpacity
               onPress={() => navigation.navigate('Detail', { crimeId: null })}
               style={{ marginLeft: 15 }}
+              testID="add-crime-button"
             >
               <Text style={{ color: '#FFFFFF', fontSize: 18 }}>+</Text>
             </TouchableOpacity>
@@ -76,6 +61,7 @@ function AppNavigator() {
             <TouchableOpacity
               onPress={() => navigation.navigate('Settings')}
               style={{ marginRight: 15 }}
+              testID="settings-button-detail"
             >
               <Text style={{ color: '#FFFFFF', fontSize: 16 }}>⚙️</Text>
             </TouchableOpacity>
