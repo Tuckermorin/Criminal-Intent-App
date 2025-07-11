@@ -1,6 +1,5 @@
-// jest.setup.js - Updated for Expo Router Testing
-import '@testing-library/jest-native/extend-expect';
-import 'expo-router/testing-library/jestSetup';
+// jest.setup.js - Updated without deprecated jest-native
+// Note: @testing-library/react-native v13+ has built-in Jest matchers
 
 // Mock console methods to reduce noise
 global.console = {
@@ -35,14 +34,13 @@ jest.mock('expo-image-picker', () => ({
 
 // Mock DateTimePicker
 jest.mock('@react-native-community/datetimepicker', () => {
-  const React = require('react');
-  const MockDateTimePicker = (props) => {
+  return function MockDateTimePicker(props) {
+    const React = require('react');
     return React.createElement('MockDateTimePicker', {
       testID: 'date-time-picker',
       ...props,
     });
   };
-  return MockDateTimePicker;
 });
 
 // Mock expo-status-bar
@@ -65,6 +63,24 @@ jest.mock('uuid', () => ({
   v4: jest.fn(() => 'test-uuid-123'),
 }));
 
+// Mock expo-router
+jest.mock('expo-router', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+    back: jest.fn(),
+    replace: jest.fn(),
+  }),
+  useLocalSearchParams: () => ({}),
+  useFocusEffect: (callback) => {
+    const React = require('react');
+    React.useEffect(callback, []);
+  },
+  Stack: ({ children }) => {
+    const React = require('react');
+    return React.createElement('div', {}, children);
+  },
+}));
+
 // Global fetch mock
 global.fetch = jest.fn(() =>
   Promise.resolve({
@@ -75,6 +91,9 @@ global.fetch = jest.fn(() =>
   })
 );
 
+// // Mock React Native components that might cause issues
+// jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
+
 // Silence specific React warnings in tests
 const originalError = console.error;
 beforeAll(() => {
@@ -82,7 +101,8 @@ beforeAll(() => {
     if (
       typeof args[0] === 'string' &&
       (args[0].includes('Warning: ReactDOM.render is no longer supported') ||
-       args[0].includes('Warning: An invalid form control'))
+       args[0].includes('Warning: An invalid form control') ||
+       args[0].includes('Warning: React.createElement: type is invalid'))
     ) {
       return;
     }

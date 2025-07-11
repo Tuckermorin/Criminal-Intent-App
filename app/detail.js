@@ -1,4 +1,4 @@
-// app/detail.js - Detail Screen using Expo Router
+// app/detail.js - Detail Screen using Expo Router (Fixed for testing)
 import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
