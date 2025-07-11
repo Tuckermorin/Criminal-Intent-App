@@ -1,4 +1,4 @@
-// src/components/EmptyState.js - No icons version
+// src/components/EmptyState.js - Updated with testID support
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
@@ -8,7 +8,8 @@ export default function EmptyState({
     title,
     message,
     onAction,
-    actionText
+    actionText,
+    testID
 }) {
     const { theme, globalStyles } = useTheme();
     const styles = createEmptyStateStyles(theme);
@@ -23,6 +24,7 @@ export default function EmptyState({
                     style={[globalStyles.button, styles.actionButton]}
                     onPress={onAction}
                     activeOpacity={0.8}
+                    testID={testID}
                 >
                     <Text style={globalStyles.buttonText}>{actionText}</Text>
                 </TouchableOpacity>

@@ -1,9 +1,19 @@
-// src/components/ConfirmationModal.js - Professional Confirmation Modal
+// src/components/ConfirmationModal.js - Safer version for testing
 import React from 'react';
 import { Dimensions, Modal, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 
-const { width, height } = Dimensions.get('window');
+// Safely get dimensions with fallback for testing
+const getDimensions = () => {
+  try {
+    return Dimensions.get('window');
+  } catch (error) {
+    // Fallback for testing environment
+    return { width: 375, height: 812 };
+  }
+};
+
+const { width, height } = getDimensions();
 
 const ConfirmationModal = ({ 
     visible, 

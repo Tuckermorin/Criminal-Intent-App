@@ -1,24 +1,37 @@
-// __tests__/userFlow.test.js - Fixed import paths
+// __tests__/userFlow.test.js - Fixed and simplified
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import React from 'react';
 
-// Import your components - FIXED PATHS
+// Import your components
 import { ThemeProvider } from '../src/context/ThemeContext';
 import DetailScreen from '../src/screens/DetailScreen';
 import IndexScreen from '../src/screens/IndexScreen';
 
-// Mock navigation
+// Mock navigation at the top level
 const mockNavigate = jest.fn();
 const mockGoBack = jest.fn();
 
+// Override the navigation mock for this test file
 jest.mock('@react-navigation/native', () => ({
   ...jest.requireActual('@react-navigation/native'),
   useNavigation: () => ({
     navigate: mockNavigate,
     goBack: mockGoBack,
+    dispatch: jest.fn(),
+    setOptions: jest.fn(),
+    addListener: jest.fn(),
+    removeListener: jest.fn(),
   }),
-  useFocusEffect: jest.fn((effect) => effect()),
+  useFocusEffect: jest.fn((effect) => {
+    // Call effect immediately in tests
+    effect();
+  }),
+  useRoute: () => ({
+    params: {},
+    key: 'test',
+    name: 'test',
+  }),
 }));
 
 // Helper to render with theme
@@ -34,7 +47,7 @@ describe("Criminal Intent App User Flow", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     
-    // Mock AsyncStorage responses
+    // Reset AsyncStorage mocks
     AsyncStorage.getItem.mockImplementation((key) => {
       if (key === '@criminal_intent_crimes') {
         return Promise.resolve(null);
@@ -86,10 +99,15 @@ describe("Criminal Intent App User Flow", () => {
     it('validates title input and shows error for empty title', async () => {
       renderWithTheme(<DetailScreen route={mockRoute} />);
       
-      const saveButton = await screen.findByText('SAVE');
+      // Wait for component to render
+      await waitFor(() => {
+        expect(screen.getByText('SAVE')).toBeTruthy();
+      });
+
+      const saveButton = screen.getByText('SAVE');
       fireEvent.press(saveButton);
       
-      // Should show validation toast
+      // Should show validation toast - wait for it to appear
       await waitFor(() => {
         expect(screen.getByText('Please enter a title for the crime')).toBeTruthy();
       });
@@ -98,8 +116,13 @@ describe("Criminal Intent App User Flow", () => {
     it('allows filling out crime form', async () => {
       renderWithTheme(<DetailScreen route={mockRoute} />);
       
-      const titleInput = await screen.findByPlaceholderText('Enter crime title');
-      const detailsInput = await screen.findByPlaceholderText('What happened?');
+      // Wait for form to render
+      await waitFor(() => {
+        expect(screen.getByPlaceholderText('Enter crime title')).toBeTruthy();
+      });
+
+      const titleInput = screen.getByPlaceholderText('Enter crime title');
+      const detailsInput = screen.getByPlaceholderText('What happened?');
       
       fireEvent.changeText(titleInput, 'Test Crime');
       fireEvent.changeText(detailsInput, 'This is a test crime.');
@@ -111,10 +134,15 @@ describe("Criminal Intent App User Flow", () => {
     it('toggles solved status', async () => {
       renderWithTheme(<DetailScreen route={mockRoute} />);
       
-      const solvedCheckbox = await screen.findByText('Solved');
+      // Wait for component to render
+      await waitFor(() => {
+        expect(screen.getByText('Solved')).toBeTruthy();
+      });
+
+      const solvedCheckbox = screen.getByText('Solved');
       fireEvent.press(solvedCheckbox);
       
-      // Should show checkmark
+      // Should show checkmark after toggle
       await waitFor(() => {
         expect(screen.getByText('✓')).toBeTruthy();
       });
@@ -123,8 +151,13 @@ describe("Criminal Intent App User Flow", () => {
     it('saves crime with valid data', async () => {
       renderWithTheme(<DetailScreen route={mockRoute} />);
       
-      const titleInput = await screen.findByPlaceholderText('Enter crime title');
-      const saveButton = await screen.findByText('SAVE');
+      // Wait for form to render
+      await waitFor(() => {
+        expect(screen.getByPlaceholderText('Enter crime title')).toBeTruthy();
+      });
+
+      const titleInput = screen.getByPlaceholderText('Enter crime title');
+      const saveButton = screen.getByText('SAVE');
       
       fireEvent.changeText(titleInput, 'Valid Crime Title');
       fireEvent.press(saveButton);
@@ -155,10 +188,15 @@ describe("Criminal Intent App User Flow", () => {
         </ThemeProvider>
       );
       
+      // Wait for DetailScreen to render
+      await waitFor(() => {
+        expect(screen.getByPlaceholderText('Enter crime title')).toBeTruthy();
+      });
+
       // Fill out the form
-      const titleInput = await screen.findByPlaceholderText('Enter crime title');
-      const detailsInput = await screen.findByPlaceholderText('What happened?');
-      const saveButton = await screen.findByText('SAVE');
+      const titleInput = screen.getByPlaceholderText('Enter crime title');
+      const detailsInput = screen.getByPlaceholderText('What happened?');
+      const saveButton = screen.getByText('SAVE');
       
       fireEvent.changeText(titleInput, 'Integration Test Crime');
       fireEvent.changeText(detailsInput, 'This crime was created during integration testing.');

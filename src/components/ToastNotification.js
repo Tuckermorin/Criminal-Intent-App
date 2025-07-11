@@ -1,9 +1,19 @@
-// src/components/ToastNotification.js - Professional Toast Component
+// src/components/ToastNotification.js - Professional Toast Component (Safe for testing)
 import React, { useEffect, useRef } from 'react';
 import { Animated, Dimensions, Text } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 
-const { width } = Dimensions.get('window');
+// Safely get dimensions with fallback for testing
+const getDimensions = () => {
+  try {
+    return Dimensions.get('window');
+  } catch (error) {
+    // Fallback for testing environment
+    return { width: 375, height: 812 };
+  }
+};
+
+const { width } = getDimensions();
 
 const ToastNotification = ({ visible, message, type = 'success', duration = 3000, onHide }) => {
     const { theme } = useTheme();

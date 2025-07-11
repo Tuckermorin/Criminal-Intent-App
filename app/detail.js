@@ -1,6 +1,6 @@
-// src/screens/DetailScreen.js - Updated with safe navigation and cleanup
-import { useNavigation } from '@react-navigation/native';
+// app/detail.js - Detail Screen using Expo Router
 import * as ImagePicker from 'expo-image-picker';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import {
     Image,
@@ -10,36 +10,36 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
-import ConfirmationModal from '../components/ConfirmationModal';
-import DatePickerModal from '../components/DatePickerModal';
-import ToastNotification from '../components/ToastNotification';
-import { useTheme } from '../context/ThemeContext';
-import { createCrime, deleteCrime, getCrimeById, saveCrime } from '../storage/crimeStorage';
-import { createDetailScreenStyles } from '../styles/components/detailScreenStyles';
+import ConfirmationModal from '../src/components/ConfirmationModal';
+import DatePickerModal from '../src/components/DatePickerModal';
+import ToastNotification from '../src/components/ToastNotification';
+import { useTheme } from '../src/context/ThemeContext';
+import { createCrime, deleteCrime, getCrimeById, saveCrime } from '../src/storage/crimeStorage';
+import { createDetailScreenStyles } from '../src/styles/components/detailScreenStyles';
 import {
     canSaveCrime,
     getCrimeValidationMessage,
     sanitizeCrimeData,
     validateCrimeTitle
-} from '../utils/crimeValidation';
-import { formatDateForDisplay } from '../utils/dateUtils';
+} from '../src/utils/crimeValidation';
+import { formatDateForDisplay } from '../src/utils/dateUtils';
 
 // Custom hook for safe navigation with cleanup
 const useSafeNavigation = () => {
-    const navigation = useNavigation();
+    const router = useRouter();
     const timeoutRefs = useRef([]);
 
     const safeNavigateBack = (delay = 0) => {
         if (delay > 0) {
             const timeoutId = setTimeout(() => {
-                if (navigation) {
-                    navigation.goBack();
+                if (router) {
+                    router.back();
                 }
             }, delay);
             timeoutRefs.current.push(timeoutId);
         } else {
-            if (navigation) {
-                navigation.goBack();
+            if (router) {
+                router.back();
             }
         }
     };
@@ -54,8 +54,8 @@ const useSafeNavigation = () => {
     return { safeNavigateBack };
 };
 
-export default function DetailScreen({ route, navigation }) {
-    const { crimeId } = route.params;
+export default function DetailScreen() {
+    const { crimeId } = useLocalSearchParams();
     const { theme, globalStyles } = useTheme();
     const { safeNavigateBack } = useSafeNavigation();
     const styles = createDetailScreenStyles(theme);
@@ -84,7 +84,7 @@ export default function DetailScreen({ route, navigation }) {
     });
 
     // Check if this is an existing crime (has crimeId) or new crime
-    const isExistingCrime = crimeId !== null;
+    const isExistingCrime = crimeId !== undefined;
 
     useEffect(() => {
         if (crimeId) {
@@ -315,8 +315,9 @@ export default function DetailScreen({ route, navigation }) {
                         ]}
                         value={crime.title}
                         onChangeText={handleTitleChange}
-                        placeholder="Enter crime title"
+                        placeholder="Title"
                         placeholderTextColor={theme.colors.placeholder}
+                        testID="title-input"
                     />
                     {titleError && (
                         <Text style={{ color: theme.colors.error, fontSize: 14, marginTop: 4 }}>
@@ -337,6 +338,7 @@ export default function DetailScreen({ route, navigation }) {
                         multiline
                         numberOfLines={4}
                         textAlignVertical="top"
+                        testID="details-input"
                     />
                 </View>
 
@@ -376,9 +378,10 @@ export default function DetailScreen({ route, navigation }) {
                     onPress={handleSave}
                     disabled={isSaving || isDeleting}
                     activeOpacity={0.8}
+                    testID="save-button"
                 >
                     <Text style={globalStyles.buttonText}>
-                        {isSaving ? 'Saving...' : 'SAVE'}
+                        {isSaving ? 'Saving...' : 'Save'}
                     </Text>
                 </TouchableOpacity>
 

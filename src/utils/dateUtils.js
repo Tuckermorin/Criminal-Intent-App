@@ -1,4 +1,4 @@
-// src/utils/dateUtils.js
+// src/utils/dateUtils.js - Updated with improved getRelativeTime
 
 /**
  * Formats a date string for display in the crime list
@@ -10,6 +10,9 @@ export const formatDateForList = (dateString) => {
   
   try {
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return 'Invalid Date';
+    }
     return date.toLocaleDateString('en-US', {
       weekday: 'short',
       year: 'numeric',
@@ -32,6 +35,9 @@ export const formatTimeForList = (dateString) => {
   
   try {
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return 'Invalid Time';
+    }
     return date.toLocaleTimeString('en-US', {
       hour: '2-digit',
       minute: '2-digit',
@@ -52,6 +58,9 @@ export const formatDateForDisplay = (dateString) => {
   
   try {
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return 'Invalid Date';
+    }
     return date.toLocaleDateString('en-US', {
       weekday: 'long',
       year: 'numeric',
@@ -74,6 +83,9 @@ export const isToday = (dateString) => {
   
   try {
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return false;
+    }
     const today = new Date();
     
     return date.getDate() === today.getDate() &&
@@ -95,24 +107,43 @@ export const getRelativeTime = (dateString) => {
   
   try {
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return '';
+    }
+    
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-    const diffMinutes = Math.floor(diffMs / (1000 * 60));
     
+    // Calculate different time units
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    
+    // Handle future dates (negative differences)
+    if (diffMs < 0) {
+      const absDiffMs = Math.abs(diffMs);
+      const futureMinutes = Math.floor(absDiffMs / (1000 * 60));
+      const futureHours = Math.floor(absDiffMs / (1000 * 60 * 60));
+      const futureDays = Math.floor(absDiffMs / (1000 * 60 * 60 * 24));
+      
+      if (futureDays > 0) {
+        return `in ${futureDays} day${futureDays > 1 ? 's' : ''}`;
+      } else if (futureHours > 0) {
+        return `in ${futureHours} hour${futureHours > 1 ? 's' : ''}`;
+      } else if (futureMinutes > 0) {
+        return `in ${futureMinutes} minute${futureMinutes > 1 ? 's' : ''}`;
+      } else {
+        return 'Just now';
+      }
+    }
+    
+    // Handle past dates
     if (diffDays > 0) {
       return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
-    } else if (diffDays < 0) {
-      return `in ${Math.abs(diffDays)} day${Math.abs(diffDays) > 1 ? 's' : ''}`;
     } else if (diffHours > 0) {
       return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-    } else if (diffHours < 0) {
-      return `in ${Math.abs(diffHours)} hour${Math.abs(diffHours) > 1 ? 's' : ''}`;
     } else if (diffMinutes > 0) {
       return `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
-    } else if (diffMinutes < 0) {
-      return `in ${Math.abs(diffMinutes)} minute${Math.abs(diffMinutes) > 1 ? 's' : ''}`;
     } else {
       return 'Just now';
     }
