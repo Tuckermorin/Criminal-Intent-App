@@ -1,29 +1,29 @@
-// jest.config.js - Fixed configuration with node environment
+// jest.config.js
 module.exports = {
-  preset: 'react-native',
+  // Use the Expo preset so native modules are mocked automatically
+  preset: 'jest-expo',
+
+  // Run your setup file (where you import native matchers and
+  // wire up Expo Router’s jestSetup) before each test suite
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  setupFiles: ['<rootDir>/node_modules/react-native/jest/setup.js'],
-  transformIgnorePatterns: [
-    'node_modules/(?!(react-native|@react-native|@react-navigation|expo-.*|@expo.*|react-native-vector-icons|react-native-gesture-handler|@react-native-async-storage|@react-native-community)/)',
+
+  // What file extensions Jest will look for
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
+
+  // How Jest finds your tests
+  testMatch: [
+    '**/__tests__/**/*.(js|jsx|ts|tsx)',
+    '**/*.(test|spec).(js|jsx|ts|tsx)',
   ],
-  testMatch: ['**/__tests__/**/*.test.js'],
-  collectCoverageFrom: [
-    'src/**/*.{js,jsx}',
-    '!src/**/*.test.{js,jsx}',
-    '!src/**/__tests__/**',
-  ],
+
+  // Your custom path alias
   moduleNameMapper: {
-    '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': 
-      'identity-obj-proxy',
-    '^@/(.*)$': '<rootDir>/src/$1',
+    '^@/(.*)$': '<rootDir>/$1',
   },
-  testEnvironment: 'node',
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
-  transform: {
-    '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
-  },
-  testTimeout: 10000,
-  clearMocks: true,
-  resetMocks: true,
-  restoreMocks: true,
+
+  // Ignore these directories
+  testPathIgnorePatterns: [
+    '<rootDir>/node_modules/',
+    '<rootDir>/.expo/',
+  ],
 };

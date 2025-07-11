@@ -1,24 +1,6 @@
-// jest.setup.js - Updated for Expo Router
+// jest.setup.js - Updated for Expo Router Testing
 import '@testing-library/jest-native/extend-expect';
-import 'react-native-gesture-handler/jestSetup';
-
-// Mock React Native Dimensions globally
-global.mockDimensions = {
-  get: jest.fn(() => ({ width: 375, height: 812 })),
-  addEventListener: jest.fn(),
-  removeEventListener: jest.fn(),
-};
-
-// Mock the Dimensions module before any React Native imports
-jest.doMock('react-native', () => {
-  const RN = jest.requireActual('react-native');
-  return Object.setPrototypeOf(
-    {
-      Dimensions: global.mockDimensions,
-    },
-    RN
-  );
-});
+import 'expo-router/testing-library/jestSetup';
 
 // Mock console methods to reduce noise
 global.console = {
@@ -36,21 +18,6 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
   clear: jest.fn(() => Promise.resolve()),
 }));
 
-// Mock Expo Router
-jest.mock('expo-router', () => ({
-  useRouter: () => ({
-    push: jest.fn(),
-    back: jest.fn(),
-    replace: jest.fn(),
-  }),
-  useLocalSearchParams: () => ({}),
-  useFocusEffect: jest.fn((effect) => effect()),
-  Stack: {
-    Screen: ({ children }) => children,
-  },
-  Link: ({ children }) => children,
-}));
-
 // Mock expo-image-picker
 jest.mock('expo-image-picker', () => ({
   requestMediaLibraryPermissionsAsync: jest.fn(() => 
@@ -66,7 +33,7 @@ jest.mock('expo-image-picker', () => ({
   },
 }));
 
-// Mock DateTimePicker with a simple component
+// Mock DateTimePicker
 jest.mock('@react-native-community/datetimepicker', () => {
   const React = require('react');
   const MockDateTimePicker = (props) => {
@@ -93,18 +60,12 @@ jest.mock('expo-constants', () => ({
   },
 }));
 
-// Mock expo-linking
-jest.mock('expo-linking', () => ({
-  createURL: jest.fn(),
-  parse: jest.fn(),
-}));
-
-// Mock UUID generation
+// Mock UUID generation for consistent testing
 jest.mock('uuid', () => ({
   v4: jest.fn(() => 'test-uuid-123'),
 }));
 
-// Global test utilities
+// Global fetch mock
 global.fetch = jest.fn(() =>
   Promise.resolve({
     json: () => Promise.resolve({}),
@@ -114,7 +75,7 @@ global.fetch = jest.fn(() =>
   })
 );
 
-// Silence the warning about act() function
+// Silence specific React warnings in tests
 const originalError = console.error;
 beforeAll(() => {
   console.error = (...args) => {
