@@ -1,7 +1,7 @@
 // app/index.js - Main Screen using Expo Router
 import { useFocusEffect, useRouter } from 'expo-router';
 import React, { useCallback, useState } from 'react';
-import { FlatList, RefreshControl, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, RefreshControl, Text, Pressable, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import CrimeListItem from '../src/components/CrimeListItem';
 import EmptyState from '../src/components/EmptyState';
@@ -68,7 +68,7 @@ export default function IndexScreen() {
     return (
         <View style={[globalStyles.container]}>
             {/* Add Crime Button - Fixed Position */}
-            <TouchableOpacity
+            <Pressable
                 style={{
                     position: 'absolute',
                     top: 20,
@@ -90,7 +90,7 @@ export default function IndexScreen() {
                 testID="add-crime-button"
             >
                 <Ionicons name="add" size={28} color="#FFFFFF" />
-            </TouchableOpacity>
+            </Pressable>
 
             <FlatList
                 data={crimes}

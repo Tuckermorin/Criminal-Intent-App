@@ -1,7 +1,7 @@
 // app/_layout.js - Root Layout for Expo Router
 import { Stack } from 'expo-router';
 import React from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import { Text, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ThemeProvider, useTheme } from '../src/context/ThemeContext';
 
@@ -25,12 +25,12 @@ function RootLayoutNav() {
         options={{
           title: 'Criminal Intent',
           headerRight: () => (
-            <TouchableOpacity
+            <Pressable
               style={{ marginRight: 15 }}
               testID="settings-button"
             >
               <Ionicons name="settings" size={20} color="#FFFFFF" />
-            </TouchableOpacity>
+            </Pressable>
           ),
         }}
       />

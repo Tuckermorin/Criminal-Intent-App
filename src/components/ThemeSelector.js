@@ -1,6 +1,6 @@
 // src/components/ThemeSelector.js
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 import { createThemeSelectorStyles } from '../styles/components/themeSelectorStyles';
@@ -17,11 +17,14 @@ export default function ThemeSelector() {
         const isSelected = themeName === themeKey;
 
         return (
-            <TouchableOpacity
+            <Pressable
                 key={themeKey}
-                style={[styles.themeOption, isSelected && styles.themeOptionSelected]}
                 onPress={() => handleThemeChange(themeKey)}
-                activeOpacity={0.7}
+                style={({ pressed }) => [
+                    styles.themeOption,
+                    isSelected && styles.themeOptionSelected,
+                    pressed && { opacity: 0.7 },
+                ]}
             >
                 <View style={styles.themeInfo}>
                     <View style={styles.themeHeader}>
@@ -67,7 +70,7 @@ export default function ThemeSelector() {
                         style={styles.checkIcon}
                     />
                 )}
-            </TouchableOpacity>
+            </Pressable>
         );
     };
 
