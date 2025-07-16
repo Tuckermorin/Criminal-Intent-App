@@ -2,6 +2,7 @@
 import { useFocusEffect, useRouter } from 'expo-router';
 import React, { useCallback, useState } from 'react';
 import { FlatList, RefreshControl, Text, TouchableOpacity, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import CrimeListItem from '../src/components/CrimeListItem';
 import EmptyState from '../src/components/EmptyState';
 import { useTheme } from '../src/context/ThemeContext';
@@ -88,7 +89,7 @@ export default function IndexScreen() {
                 onPress={handleAddCrime}
                 testID="add-crime-button"
             >
-                <Text style={{ color: '#FFFFFF', fontSize: 24, fontWeight: 'bold' }}>+</Text>
+                <Ionicons name="add" size={28} color="#FFFFFF" />
             </TouchableOpacity>
 
             <FlatList
