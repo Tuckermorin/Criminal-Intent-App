@@ -1,18 +1,13 @@
 // src/storage/crimeStorage.js
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { randomUUID } from 'expo-crypto';
 
 // Storage keys
 const CRIMES_STORAGE_KEY = '@criminal_intent_crimes';
 const CRIME_COUNTER_KEY = '@criminal_intent_counter';
 
 // Helper function to generate UUID
-export const generateUUID = () => {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        const r = Math.random() * 16 | 0;
-        const v = c === 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
-};
+export const generateUUID = () => randomUUID();
 
 // Crime data structure
 export const createCrime = (overrides = {}) => ({
