@@ -1,23 +1,38 @@
+
+// src/components/DatePickerModal.js - No Icons Version
+import DateTimePicker from '@react-native-community/datetimepicker';
+import React, { useEffect, useState } from 'react';
+import { Modal, Platform, Text, TouchableOpacity, View } from 'react-native';
+
 // src/components/DatePickerModal.js
 import React from 'react';
 import { View, Text, Modal, TouchableOpacity, Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+
 import { useTheme } from '../context/ThemeContext';
 import { createDatePickerStyles } from '../styles/components/datePickerStyles';
 
 export default function DatePickerModal({ visible, date, onDateChange, onCancel }) {
-    const { theme, globalStyles } = useTheme();
+    const { theme } = useTheme();
     const styles = createDatePickerStyles(theme);
 
-    const handleDateChange = (event, selectedDate) => {
+    const [selectedDate, setSelectedDate] = useState(date);
+
+    useEffect(() => {
+        if (visible) {
+            setSelectedDate(date);
+        }
+    }, [visible, date]);
+
+    const handleDateChange = (event, chosenDate) => {
         if (Platform.OS === 'android') {
-            if (event.type === 'set' && selectedDate) {
-                onDateChange(selectedDate);
+            if (event.type === 'set' && chosenDate) {
+                onDateChange(chosenDate);
             } else {
                 onCancel();
             }
-        } else if (selectedDate) {
-            onDateChange(selectedDate);
+        } else if (chosenDate) {
+            setSelectedDate(chosenDate);
         }
     };
 
@@ -47,7 +62,7 @@ export default function DatePickerModal({ visible, date, onDateChange, onCancel 
                     </View>
 
                     <DateTimePicker
-                        value={date}
+                        value={selectedDate}
                         mode="date"
                         display="wheels"
                         onChange={handleDateChange}
@@ -66,7 +81,7 @@ export default function DatePickerModal({ visible, date, onDateChange, onCancel 
 
                         <TouchableOpacity
                             style={[styles.button, styles.okButton]}
-                            onPress={() => onDateChange(date)}
+                            onPress={() => onDateChange(selectedDate)}
                             activeOpacity={0.7}
                         >
                             <Text style={styles.okButtonText}>OK</Text>
