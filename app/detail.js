@@ -10,6 +10,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import ConfirmationModal from '../src/components/ConfirmationModal';
 import DatePickerModal from '../src/components/DatePickerModal';
 import ToastNotification from '../src/components/ToastNotification';
@@ -289,7 +290,7 @@ export default function DetailScreen() {
                                 onPress={handleImagePicker}
                                 activeOpacity={0.7}
                             >
-                                <Text style={styles.photoButtonText}>📷</Text>
+                            <Ionicons name="camera" style={styles.photoButtonText} />
                             </TouchableOpacity>
                         </View>
                     ) : (
@@ -298,7 +299,7 @@ export default function DetailScreen() {
                             onPress={handleImagePicker}
                             activeOpacity={0.7}
                         >
-                            <Text style={styles.photoPlaceholderIcon}>📷</Text>
+                            <Ionicons name="camera" style={styles.photoPlaceholderIcon} />
                             <Text style={styles.photoPlaceholderText}>Add Photo</Text>
                         </TouchableOpacity>
                     )}
@@ -352,7 +353,7 @@ export default function DetailScreen() {
                         <Text style={styles.dateButtonText}>
                             {formatDateForDisplay(crime.date)}
                         </Text>
-                        <Text style={styles.dateButtonIcon}>📅</Text>
+                        <Ionicons name="calendar" style={styles.dateButtonIcon} />
                     </TouchableOpacity>
                 </View>
 
@@ -365,7 +366,7 @@ export default function DetailScreen() {
                     >
                         <View style={[styles.checkbox, crime.solved && styles.checkboxChecked]}>
                             {crime.solved && (
-                                <Text style={styles.checkmarkText}>✓</Text>
+                                <Ionicons name="checkmark-circle" style={styles.checkmarkText} />
                             )}
                         </View>
                         <Text style={styles.checkboxLabel}>Solved</Text>
