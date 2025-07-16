@@ -67,30 +67,6 @@ export default function IndexScreen() {
 
     return (
         <View style={[globalStyles.container]}>
-            {/* Add Crime Button - Fixed Position */}
-            <Pressable
-                style={{
-                    position: 'absolute',
-                    top: 20,
-                    right: 20,
-                    backgroundColor: theme.colors.primary,
-                    borderRadius: 30,
-                    width: 60,
-                    height: 60,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    zIndex: 1000,
-                    shadowColor: '#000',
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.25,
-                    shadowRadius: 3.84,
-                    elevation: 5,
-                }}
-                onPress={handleAddCrime}
-                testID="add-crime-button"
-            >
-                <Ionicons name="add" size={28} color="#FFFFFF" />
-            </Pressable>
 
             <FlatList
                 data={crimes}

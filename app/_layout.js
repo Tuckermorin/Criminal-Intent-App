@@ -1,12 +1,33 @@
 // app/_layout.js - Root Layout for Expo Router
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import React from 'react';
-import { Text, Pressable } from 'react-native';
+import { View, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ThemeProvider, useTheme } from '../src/context/ThemeContext';
 
 function RootLayoutNav() {
   const { theme } = useTheme();
+  const router = useRouter();
+
+  const SettingsButton = () => (
+    <Pressable
+      onPress={() => router.push('/settings')}
+      style={{ marginRight: 15 }}
+      testID="settings-button"
+    >
+      <Ionicons name="settings" size={20} color="#FFFFFF" />
+    </Pressable>
+  );
+
+  const AddButton = () => (
+    <Pressable
+      onPress={() => router.push('/detail')}
+      style={{ marginRight: 15 }}
+      testID="add-crime-button"
+    >
+      <Ionicons name="add" size={24} color="#FFFFFF" />
+    </Pressable>
+  );
 
   return (
     <Stack
@@ -25,12 +46,10 @@ function RootLayoutNav() {
         options={{
           title: 'Criminal Intent',
           headerRight: () => (
-            <Pressable
-              style={{ marginRight: 15 }}
-              testID="settings-button"
-            >
-              <Ionicons name="settings" size={20} color="#FFFFFF" />
-            </Pressable>
+            <View style={{ flexDirection: 'row' }}>
+              <AddButton />
+              <SettingsButton />
+            </View>
           ),
         }}
       />
@@ -38,12 +57,14 @@ function RootLayoutNav() {
         name="detail"
         options={{
           title: 'Crime Detail',
+          headerRight: () => <SettingsButton />,
         }}
       />
       <Stack.Screen
         name="settings"
         options={{
           title: 'Settings',
+          headerRight: () => null,
         }}
       />
     </Stack>

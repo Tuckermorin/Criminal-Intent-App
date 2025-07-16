@@ -58,9 +58,9 @@ jest.mock('expo-constants', () => ({
   },
 }));
 
-// Mock UUID generation for consistent testing
-jest.mock('uuid', () => ({
-  v4: jest.fn(() => 'test-uuid-123'),
+// Mock expo-crypto UUID generation for consistent testing
+jest.mock('expo-crypto', () => ({
+  randomUUID: jest.fn(() => 'test-uuid-123'),
 }));
 
 // Mock expo-router
