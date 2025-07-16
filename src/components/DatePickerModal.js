@@ -2,11 +2,11 @@
 // src/components/DatePickerModal.js - No Icons Version
 import DateTimePicker from '@react-native-community/datetimepicker';
 import React, { useEffect, useState } from 'react';
-import { Modal, Platform, Text, TouchableOpacity, View } from 'react-native';
+import { Modal, Platform, Text, Pressable, View } from 'react-native';
 
 // src/components/DatePickerModal.js
 import React from 'react';
-import { View, Text, Modal, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, Modal, Pressable, Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import { useTheme } from '../context/ThemeContext';
@@ -71,21 +71,27 @@ export default function DatePickerModal({ visible, date, onDateChange, onCancel 
                     />
 
                     <View style={styles.buttonRow}>
-                        <TouchableOpacity
-                            style={[styles.button, styles.cancelButton]}
+                        <Pressable
                             onPress={onCancel}
-                            activeOpacity={0.7}
+                            style={({ pressed }) => [
+                                styles.button,
+                                styles.cancelButton,
+                                pressed && { opacity: 0.7 },
+                            ]}
                         >
                             <Text style={styles.cancelButtonText}>Cancel</Text>
-                        </TouchableOpacity>
+                        </Pressable>
 
-                        <TouchableOpacity
-                            style={[styles.button, styles.okButton]}
+                        <Pressable
                             onPress={() => onDateChange(selectedDate)}
-                            activeOpacity={0.7}
+                            style={({ pressed }) => [
+                                styles.button,
+                                styles.okButton,
+                                pressed && { opacity: 0.7 },
+                            ]}
                         >
                             <Text style={styles.okButtonText}>OK</Text>
-                        </TouchableOpacity>
+                        </Pressable>
                     </View>
                 </View>
             </View>

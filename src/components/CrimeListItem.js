@@ -1,6 +1,6 @@
 // src/components/CrimeListItem.js
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 import { createCrimeItemStyles } from '../styles/components/crimeItemStyles';
@@ -28,10 +28,13 @@ export default function CrimeListItem({ crime, onPress }) {
     };
 
     return (
-        <TouchableOpacity
-            style={[globalStyles.listItem, styles.container]}
+        <Pressable
             onPress={onPress}
-            activeOpacity={0.7}
+            style={({ pressed }) => [
+                globalStyles.listItem,
+                styles.container,
+                pressed && { opacity: 0.7 },
+            ]}
         >
             <View style={styles.content}>
                 <View style={styles.header}>
@@ -70,6 +73,6 @@ export default function CrimeListItem({ crime, onPress }) {
                     color={theme.colors.textSecondary}
                 />
             </View>
-        </TouchableOpacity>
+        </Pressable>
     );
 }

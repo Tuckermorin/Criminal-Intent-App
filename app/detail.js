@@ -7,7 +7,7 @@ import {
     ScrollView,
     Text,
     TextInput,
-    TouchableOpacity,
+    Pressable,
     View
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -285,23 +285,27 @@ export default function DetailScreen() {
                     {crime.photoUri ? (
                         <View style={styles.photoContainer}>
                             <Image source={{ uri: crime.photoUri }} style={styles.photo} />
-                            <TouchableOpacity
-                                style={styles.photoButton}
+                            <Pressable
                                 onPress={handleImagePicker}
-                                activeOpacity={0.7}
+                                style={({ pressed }) => [
+                                    styles.photoButton,
+                                    pressed && { opacity: 0.7 },
+                                ]}
                             >
                             <Ionicons name="camera" style={styles.photoButtonText} />
-                            </TouchableOpacity>
+                            </Pressable>
                         </View>
                     ) : (
-                        <TouchableOpacity
-                            style={styles.photoPlaceholder}
+                        <Pressable
                             onPress={handleImagePicker}
-                            activeOpacity={0.7}
+                            style={({ pressed }) => [
+                                styles.photoPlaceholder,
+                                pressed && { opacity: 0.7 },
+                            ]}
                         >
                             <Ionicons name="camera" style={styles.photoPlaceholderIcon} />
                             <Text style={styles.photoPlaceholderText}>Add Photo</Text>
-                        </TouchableOpacity>
+                        </Pressable>
                     )}
                 </View>
 
@@ -345,24 +349,28 @@ export default function DetailScreen() {
 
                 {/* Date Section */}
                 <View style={styles.section}>
-                    <TouchableOpacity
-                        style={styles.dateButton}
+                    <Pressable
                         onPress={() => setShowDatePicker(true)}
-                        activeOpacity={0.7}
+                        style={({ pressed }) => [
+                            styles.dateButton,
+                            pressed && { opacity: 0.7 },
+                        ]}
                     >
                         <Text style={styles.dateButtonText}>
                             {formatDateForDisplay(crime.date)}
                         </Text>
                         <Ionicons name="calendar" style={styles.dateButtonIcon} />
-                    </TouchableOpacity>
+                    </Pressable>
                 </View>
 
                 {/* Solved Checkbox */}
                 <View style={styles.section}>
-                    <TouchableOpacity
-                        style={styles.checkboxRow}
+                    <Pressable
                         onPress={handleSolvedToggle}
-                        activeOpacity={0.7}
+                        style={({ pressed }) => [
+                            styles.checkboxRow,
+                            pressed && { opacity: 0.7 },
+                        ]}
                     >
                         <View style={[styles.checkbox, crime.solved && styles.checkboxChecked]}>
                             {crime.solved && (
@@ -370,34 +378,39 @@ export default function DetailScreen() {
                             )}
                         </View>
                         <Text style={styles.checkboxLabel}>Solved</Text>
-                    </TouchableOpacity>
+                    </Pressable>
                 </View>
 
                 {/* Save Button */}
-                <TouchableOpacity
-                    style={[globalStyles.button, styles.saveButton]}
+                <Pressable
                     onPress={handleSave}
                     disabled={isSaving || isDeleting}
-                    activeOpacity={0.8}
                     testID="save-button"
+                    style={({ pressed }) => [
+                        globalStyles.button,
+                        styles.saveButton,
+                        pressed && { opacity: 0.8 },
+                    ]}
                 >
                     <Text style={globalStyles.buttonText}>
                         {isSaving ? 'Saving...' : 'Save'}
                     </Text>
-                </TouchableOpacity>
+                </Pressable>
 
                 {/* Delete Button - Only show for existing crimes */}
                 {isExistingCrime && (
-                    <TouchableOpacity
-                        style={[styles.deleteButton]}
+                    <Pressable
                         onPress={handleDelete}
                         disabled={isSaving || isDeleting}
-                        activeOpacity={0.8}
+                        style={({ pressed }) => [
+                            styles.deleteButton,
+                            pressed && { opacity: 0.8 },
+                        ]}
                     >
                         <Text style={styles.deleteButtonText}>
                             {isDeleting ? 'Deleting...' : 'DELETE CRIME'}
                         </Text>
-                    </TouchableOpacity>
+                    </Pressable>
                 )}
             </ScrollView>
 

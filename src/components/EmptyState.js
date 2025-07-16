@@ -1,6 +1,6 @@
 // src/components/EmptyState.js
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 import { createEmptyStateStyles } from '../styles/components/emptyStateStyles';
@@ -33,15 +33,18 @@ export default function EmptyState({
             </Text>
 
             {onAction && actionText && (
-                <TouchableOpacity
-                    style={[globalStyles.button, styles.actionButton]}
+                <Pressable
                     onPress={onAction}
-                    activeOpacity={0.8}
+                    style={({ pressed }) => [
+                        globalStyles.button,
+                        styles.actionButton,
+                        pressed && { opacity: 0.8 },
+                    ]}
                 >
                     <Text style={globalStyles.buttonText}>
                         {actionText}
                     </Text>
-                </TouchableOpacity>
+                </Pressable>
             )}
         </View>
     );
