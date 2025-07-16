@@ -1,6 +1,6 @@
 // src/styles/components/detailScreenStyles.js
 import { StyleSheet } from 'react-native';
-import { borderRadius, fontSize, spacing } from '../globalStyles';
+import { spacing, fontSize, borderRadius } from '../globalStyles';
 
 export const createDetailScreenStyles = (theme) => StyleSheet.create({
     scrollView: {
@@ -142,50 +142,5 @@ export const createDetailScreenStyles = (theme) => StyleSheet.create({
     saveButton: {
         marginTop: spacing.lg,
         marginBottom: spacing.xxl,
-    },
-    // Add these new styles to detailScreenStyles.js
-    photoButtonText: {
-        fontSize: 16,
-        color: '#FFFFFF',
-    },
-
-    photoPlaceholderIcon: {
-        fontSize: 40,
-        marginBottom: spacing.xs,
-    },
-
-    dateButtonIcon: {
-        fontSize: 20,
-        color: '#FFFFFF',
-    },
-
-    checkmarkText: {
-        fontSize: 16,
-        color: '#FFFFFF',
-        fontWeight: 'bold',
-    },
-    deleteButton: {
-        backgroundColor: theme.colors.error,
-        paddingVertical: spacing.md,
-        paddingHorizontal: spacing.lg,
-        borderRadius: borderRadius.md,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: spacing.md,
-        marginBottom: spacing.xxl,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
-        shadowOpacity: 0.22,
-        shadowRadius: 2.22,
-        elevation: 3,
-    },
-
-    deleteButtonText: {
-        color: '#FFFFFF',
-        fontSize: fontSize.md,
-        fontWeight: '600',
     },
 });

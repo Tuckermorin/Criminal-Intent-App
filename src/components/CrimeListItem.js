@@ -1,13 +1,31 @@
-// src/components/CrimeListItem.js - Updated to use extracted utilities
+// src/components/CrimeListItem.js
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 import { createCrimeItemStyles } from '../styles/components/crimeItemStyles';
-import { formatDateForList, formatTimeForList } from '../utils/dateUtils';
 
 export default function CrimeListItem({ crime, onPress }) {
     const { theme, globalStyles } = useTheme();
     const styles = createCrimeItemStyles(theme);
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+            weekday: 'short',
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+        });
+    };
+
+    const formatTime = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+    };
 
     return (
         <TouchableOpacity
@@ -21,16 +39,21 @@ export default function CrimeListItem({ crime, onPress }) {
                         {crime.title || 'Untitled Crime'}
                     </Text>
                     {crime.solved && (
-                        <Text style={styles.solvedText}>✓ SOLVED</Text>
+                        <Ionicons
+                            name="hand-left"
+                            size={20}
+                            color={theme.colors.primary}
+                            style={styles.solvedIcon}
+                        />
                     )}
                 </View>
 
                 <Text style={styles.date}>
-                    {formatDateForList(crime.date)}
+                    {formatDate(crime.date)}
                 </Text>
 
                 <Text style={styles.time}>
-                    {formatTimeForList(crime.date)}
+                    {formatTime(crime.date)}
                 </Text>
 
                 {crime.details && (
@@ -41,7 +64,11 @@ export default function CrimeListItem({ crime, onPress }) {
             </View>
 
             <View style={styles.rightSection}>
-                <Text style={styles.arrowText}>→</Text>
+                <Ionicons
+                    name="chevron-forward"
+                    size={20}
+                    color={theme.colors.textSecondary}
+                />
             </View>
         </TouchableOpacity>
     );

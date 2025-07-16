@@ -1,6 +1,6 @@
-// src/styles/components/themeSelectorStyles.js - Updated for Text Checkmark
+// src/styles/components/themeSelectorStyles.js
 import { StyleSheet } from 'react-native';
-import { borderRadius, fontSize, shadows, spacing } from '../globalStyles';
+import { spacing, fontSize, borderRadius, shadows } from '../globalStyles';
 
 export const createThemeSelectorStyles = (theme) => StyleSheet.create({
     container: {
@@ -86,8 +86,5 @@ export const createThemeSelectorStyles = (theme) => StyleSheet.create({
 
     checkIcon: {
         marginLeft: spacing.md,
-        fontSize: 24,
-        color: theme.colors.primary,
-        fontWeight: 'bold',
     },
 });

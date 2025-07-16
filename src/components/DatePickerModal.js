@@ -1,7 +1,14 @@
+
 // src/components/DatePickerModal.js - No Icons Version
 import DateTimePicker from '@react-native-community/datetimepicker';
 import React, { useEffect, useState } from 'react';
 import { Modal, Platform, Text, TouchableOpacity, View } from 'react-native';
+
+// src/components/DatePickerModal.js
+import React from 'react';
+import { View, Text, Modal, TouchableOpacity, Platform } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
 import { useTheme } from '../context/ThemeContext';
 import { createDatePickerStyles } from '../styles/components/datePickerStyles';
 

@@ -1,6 +1,6 @@
 // src/styles/components/emptyStateStyles.js
 import { StyleSheet } from 'react-native';
-import { fontSize, spacing } from '../globalStyles';
+import { spacing, fontSize } from '../globalStyles';
 
 export const createEmptyStateStyles = (theme) => StyleSheet.create({
     container: {
@@ -33,11 +33,5 @@ export const createEmptyStateStyles = (theme) => StyleSheet.create({
 
     actionButton: {
         minWidth: 140,
-    },
-    // Add this to the createEmptyStateStyles function
-    iconPlaceholder: {
-        fontSize: 80,
-        marginBottom: spacing.lg,
-        opacity: 0.6,
     },
 });
