@@ -111,6 +111,11 @@ export const createDetailScreenStyles = (theme) => StyleSheet.create({
         flex: 1,
     },
 
+    dateButtonIcon: {
+        color: '#FFFFFF',
+        marginLeft: spacing.sm,
+    },
+
     checkboxRow: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -133,10 +138,37 @@ export const createDetailScreenStyles = (theme) => StyleSheet.create({
         borderColor: theme.colors.primary,
     },
 
+    checkmarkText: {
+        color: '#FFFFFF',
+    },
+
     checkboxLabel: {
         fontSize: fontSize.md,
         color: theme.colors.text,
         fontWeight: '500',
+    },
+
+    photoButtonText: {
+        color: '#FFFFFF',
+        fontSize: 16,
+    },
+
+    photoPlaceholderIcon: {
+        color: theme.colors.placeholder,
+        fontSize: 32,
+    },
+
+    deleteButton: {
+        marginTop: spacing.lg,
+        paddingVertical: spacing.md,
+        alignItems: 'center',
+        backgroundColor: theme.colors.error,
+        borderRadius: borderRadius.md,
+    },
+
+    deleteButtonText: {
+        color: '#FFFFFF',
+        fontWeight: '600',
     },
 
     saveButton: {
