@@ -1,16 +1,28 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-export default function ToastNotification({ visible, message, type = 'success', onHide }) {
+/**
+ * ToastNotification component
+ *
+ * @param {Object} props
+ * @param {string} props.message - Message to display
+ * @param {"success" | "error"} [props.type] - Toast type
+ * @param {Function} [props.onDismiss] - Called when toast disappears
+ */
+export default function ToastNotification({
+  message,
+  type = 'success',
+  onDismiss,
+}) {
   useEffect(() => {
-    if (!visible) return;
+    if (!message) return;
     const timer = setTimeout(() => {
-      if (onHide) onHide();
+      onDismiss?.();
     }, 3000);
     return () => clearTimeout(timer);
-  }, [visible, onHide]);
+  }, [message, onDismiss]);
 
-  if (!visible) return null;
+  if (!message) return null;
 
   return (
     <View
@@ -18,6 +30,7 @@ export default function ToastNotification({ visible, message, type = 'success', 
         styles.toast,
         type === 'error' ? styles.error : styles.success,
       ]}
+      testID="toast-notification"
     >
       <Text style={styles.text}>{message}</Text>
     </View>

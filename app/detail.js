@@ -73,7 +73,6 @@ export default function DetailScreen() {
     
     // Toast notification state
     const [toast, setToast] = useState({
-        visible: false,
         message: '',
         type: 'success'
     });
@@ -97,11 +96,11 @@ export default function DetailScreen() {
     }, [crimeId]);
 
     const showToast = (message, type = 'success') => {
-        setToast({ visible: true, message, type });
+        setToast({ message, type });
     };
 
     const hideToast = () => {
-        setToast({ visible: false, message: '', type: 'success' });
+        setToast({ message: '', type: 'success' });
     };
 
     const showConfirmation = (title, message, onConfirm, type = 'default') => {
@@ -261,10 +260,9 @@ export default function DetailScreen() {
         <View style={[globalStyles.container]}>
             {/* Toast Notification */}
             <ToastNotification
-                visible={toast.visible}
                 message={toast.message}
                 type={toast.type}
-                onHide={hideToast}
+                onDismiss={hideToast}
             />
 
             {/* Confirmation Modal */}

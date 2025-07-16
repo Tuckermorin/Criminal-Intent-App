@@ -1,7 +1,7 @@
 // __tests__/expoRouterFlow.test.js - User Flow Test (Part 1 Compliant)
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fireEvent, render } from '@testing-library/react-native';
-import { renderRouter, screen, waitFor } from '@expo/router/testing-library';
+import { renderRouter, screen, waitFor } from 'expo-router/testing-library';
 import React from 'react';
 
 // Import components for testing
