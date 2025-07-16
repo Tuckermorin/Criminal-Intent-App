@@ -1,6 +1,7 @@
 // __tests__/expoRouterFlow.test.js - User Flow Test (Part 1 Compliant)
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
+import { fireEvent, render } from '@testing-library/react-native';
+import { renderRouter, screen, waitFor } from '@expo/router/testing-library';
 import React from 'react';
 
 // Import components for testing
@@ -30,62 +31,16 @@ jest.mock('expo-router', () => ({
 // Import ThemeProvider for wrapping components
 import { ThemeProvider } from '../src/context/ThemeContext';
 
-// Simulate renderRouter functionality since expo-router/testing-library isn't available
-const renderRouter = (routes, options = {}) => {
-  const { initialUrl = '/' } = options;
-  
-  // Simulate navigation state
-  let currentPathname = initialUrl;
-  
-  // Mock screen.toHavePathname functionality
-  global.mockPathname = currentPathname;
-  
-  // Choose component based on URL
-  let ComponentToRender;
-  if (initialUrl === '/' && routes.index) {
-    ComponentToRender = routes.index;
-  } else if (initialUrl === '/detail' && routes.detail) {
-    ComponentToRender = routes.detail;
-  } else if (routes._layout) {
-    ComponentToRender = routes._layout;
-  }
-  
-  if (ComponentToRender) {
-    // Wrap in ThemeProvider to fix the useTheme error
-    return render(
-      React.createElement(ThemeProvider, {}, 
-        React.createElement(ComponentToRender)
-      )
-    );
-  }
-  
-  throw new Error(`No route found for ${initialUrl}`);
-};
-
-// Mock screen.toHavePathname matcher
-expect.extend({
-  toHavePathname(received, pathname) {
-    const pass = global.mockPathname === pathname;
-    return {
-      pass,
-      message: () => pass 
-        ? `Expected screen not to have pathname ${pathname}`
-        : `Expected screen to have pathname ${pathname}, but got ${global.mockPathname}`
-    };
-  }
-});
-
 describe("Criminal Intent App User Flow", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     AsyncStorage.getItem.mockResolvedValue(null);
     AsyncStorage.setItem.mockResolvedValue();
     mockParams = {};
-    global.mockPathname = '/';
   });
 
   it("Creates a new crime", async () => {
-    // Simulate renderRouter from expo-router/testing-library
+    // Use renderRouter from expo-router/testing-library
     renderRouter(
       {
         _layout: () => React.createElement(RootLayout),
@@ -109,7 +64,6 @@ describe("Criminal Intent App User Flow", () => {
     expect(mockPush).toHaveBeenCalledWith('/detail');
     
     // Simulate navigation to detail screen
-    global.mockPathname = '/detail';
     mockParams = {}; // New crime (no crimeId)
     
     // Re-render detail screen to simulate navigation
