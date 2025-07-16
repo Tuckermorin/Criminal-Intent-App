@@ -56,7 +56,7 @@ describe("Criminal Intent App User Flow", () => {
     expect(screen).toHavePathname("/");
 
     // Find and press the add crime button (get first one - the header button)
-    const addCrimeButtons = screen.getAllByTestId("add-crime-button");
+    const addCrimeButtons = screen.getAllByRole('button');
     const addCrimeButton = addCrimeButtons[0]; // Use header button
     fireEvent.press(addCrimeButton);
 
@@ -77,9 +77,9 @@ describe("Criminal Intent App User Flow", () => {
     expect(screen).toHavePathname("/detail");
 
     // Find form elements using the required queries
-    const titleInput = await screen.findByTestId("title-input");
-    const detailsInput = await screen.findByTestId("details-input");
-    const saveButton = await screen.findByTestId("save-button");
+    const titleInput = await screen.findByPlaceholderText('Title');
+    const detailsInput = await screen.findByPlaceholderText('What happened?');
+    const saveButton = await screen.findByRole('button', { name: /save/i });
 
     // Fill out the form
     fireEvent.changeText(titleInput, "Test Crime");
@@ -114,7 +114,7 @@ describe("Criminal Intent App User Flow", () => {
     expect(screen).toHavePathname("/");
 
     // Find and press add crime button (use first one - header button)
-    const addCrimeButtons = screen.getAllByTestId("add-crime-button");
+    const addCrimeButtons = screen.getAllByRole('button');
     const addCrimeButton = addCrimeButtons[0];
     fireEvent.press(addCrimeButton);
 
@@ -136,13 +136,11 @@ describe("Criminal Intent App User Flow", () => {
     );
 
     // Should show empty state
-    await waitFor(() => {
-      expect(screen.getByText("No Crimes Reported")).toBeTruthy();
-      expect(screen.getByText("Tap the + button to add your first crime report")).toBeTruthy();
-    });
+    await screen.findByText('No Crimes Reported');
+    await screen.findByText('Tap the + button to add your first crime report');
 
     // Should be able to navigate from empty state (use first button - header)
-    const addCrimeButtons = screen.getAllByTestId("add-crime-button");
+    const addCrimeButtons = screen.getAllByRole('button');
     const addCrimeButton = addCrimeButtons[0];
     fireEvent.press(addCrimeButton);
     
@@ -163,7 +161,7 @@ describe("Criminal Intent App User Flow", () => {
     expect(screen).toHavePathname("/detail");
 
     // Try to save without title
-    const saveButton = await screen.findByTestId("save-button");
+    const saveButton = await screen.findByRole('button', { name: /save/i });
     fireEvent.press(saveButton);
 
     // Should not save invalid data
@@ -193,9 +191,7 @@ describe("Criminal Intent App User Flow", () => {
     );
 
     // Should show crime in the list
-    await waitFor(() => {
-      expect(screen.getByText("Test Crime")).toBeTruthy();
-    });
+    await screen.findByText('Test Crime');
 
     // Press on crime should navigate to detail
     const crimeItem = screen.getByText("Test Crime");
