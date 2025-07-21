@@ -291,7 +291,7 @@ export default function DetailScreen() {
                                     pressed && { opacity: 0.7 },
                                 ]}
                             >
-                                <Ionicons name="camera" style={styles.photoButtonText} />
+                                <Ionicons name="camera" size={16} color="#FFFFFF" />
                             </Pressable>
                         </View>
                     ) : (
@@ -302,7 +302,7 @@ export default function DetailScreen() {
                                 pressed && { opacity: 0.7 },
                             ]}
                         >
-                            <Ionicons name="camera" style={styles.photoPlaceholderIcon} />
+                            <Ionicons name="camera" size={32} color={theme.colors.placeholder} />
                             <Text style={styles.photoPlaceholderText}>Add Photo</Text>
                         </Pressable>
                     )}
@@ -358,7 +358,7 @@ export default function DetailScreen() {
                         <Text style={styles.dateButtonText}>
                             {formatDateForDisplay(crime.date)}
                         </Text>
-                        <Ionicons name="calendar" style={styles.dateButtonIcon} />
+                        <Ionicons name="calendar" size={20} color="#FFFFFF" />
                     </Pressable>
                 </View>
 
@@ -373,7 +373,7 @@ export default function DetailScreen() {
                     >
                         <View style={[styles.checkbox, crime.solved && styles.checkboxChecked]}>
                             {crime.solved && (
-                                <Ionicons name="checkmark-circle" style={styles.checkmarkText} />
+                                <Ionicons name="checkmark" size={16} color="#FFFFFF" />
                             )}
                         </View>
                         <Text style={styles.checkboxLabel}>Solved</Text>
