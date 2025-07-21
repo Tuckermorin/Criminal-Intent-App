@@ -1,8 +1,7 @@
 // app/_layout.js - Root Layout for Expo Router
-import { Stack, useRouter } from 'expo-router';
-import React from 'react';
-import { View, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { Stack, useRouter } from 'expo-router';
+import { Pressable, View } from 'react-native';
 import { ThemeProvider, useTheme } from '../src/context/ThemeContext';
 
 function RootLayoutNav() {
