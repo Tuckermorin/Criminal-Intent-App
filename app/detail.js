@@ -1,22 +1,20 @@
-// app/detail.js - Detail Screen using Expo Router (Fixed for testing)
+// app/detail.js - FIXED Detail Screen with proper imports
+import { Ionicons } from '@expo/vector-icons';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
     Image,
+    Modal,
+    Pressable,
     ScrollView,
     Text,
     TextInput,
-    Pressable,
     View
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import ConfirmationModal from '../src/components/ConfirmationModal';
-import DatePickerModal from '../src/components/DatePickerModal';
 import ToastNotification from '../src/components/ToastNotification';
-import PhotoSection from '../src/components/PhotoSection';
-import CrimeForm from '../src/components/CrimeForm';
-import CrimeActions from '../src/components/CrimeActions';
 import { useTheme } from '../src/context/ThemeContext';
 import { createCrime, deleteCrime, getCrimeById, saveCrime } from '../src/storage/crimeStorage';
 import { createDetailScreenStyles } from '../src/styles/components/detailScreenStyles';
@@ -282,38 +280,218 @@ export default function DetailScreen() {
                 showsVerticalScrollIndicator={false}
             >
                 {/* Photo Section */}
-                <PhotoSection
-                    photoUri={crime.photoUri}
-                    onPickImage={handleImagePicker}
-                />
+                <View style={styles.photoSection}>
+                    {crime.photoUri ? (
+                        <View style={styles.photoContainer}>
+                            <Image source={{ uri: crime.photoUri }} style={styles.photo} />
+                            <Pressable
+                                onPress={handleImagePicker}
+                                style={({ pressed }) => [
+                                    styles.photoButton,
+                                    pressed && { opacity: 0.7 },
+                                ]}
+                            >
+                                <Ionicons name="camera" style={styles.photoButtonText} />
+                            </Pressable>
+                        </View>
+                    ) : (
+                        <Pressable
+                            onPress={handleImagePicker}
+                            style={({ pressed }) => [
+                                styles.photoPlaceholder,
+                                pressed && { opacity: 0.7 },
+                            ]}
+                        >
+                            <Ionicons name="camera" style={styles.photoPlaceholderIcon} />
+                            <Text style={styles.photoPlaceholderText}>Add Photo</Text>
+                        </Pressable>
+                    )}
+                </View>
 
-                {/* Crime Form Fields */}
-                <CrimeForm
-                    crime={crime}
-                    titleError={titleError}
-                    onTitleChange={handleTitleChange}
-                    onDetailsChange={handleDetailsChange}
-                    onDatePress={() => setShowDatePicker(true)}
-                    onSolvedToggle={handleSolvedToggle}
-                />
+                {/* Title Section */}
+                <View style={styles.section}>
+                    <Text style={styles.label}>Title</Text>
+                    <TextInput
+                        style={[
+                            globalStyles.input,
+                            styles.titleInput,
+                            titleError && { borderColor: theme.colors.error },
+                        ]}
+                        value={crime.title}
+                        onChangeText={handleTitleChange}
+                        placeholder="Title"
+                        placeholderTextColor={theme.colors.placeholder}
+                        testID="title-input"
+                    />
+                    {titleError && (
+                        <Text style={{ color: theme.colors.error, fontSize: 14, marginTop: 4 }}>
+                            {titleError}
+                        </Text>
+                    )}
+                </View>
 
-                {/* Save/Delete Actions */}
-                <CrimeActions
-                    onSave={handleSave}
-                    onDelete={handleDelete}
-                    isExistingCrime={isExistingCrime}
-                    isSaving={isSaving}
-                    isDeleting={isDeleting}
-                />
+                {/* Details Section */}
+                <View style={styles.section}>
+                    <Text style={styles.label}>Details</Text>
+                    <TextInput
+                        style={[globalStyles.input, styles.detailsInput]}
+                        value={crime.details}
+                        onChangeText={handleDetailsChange}
+                        placeholder="What happened?"
+                        placeholderTextColor={theme.colors.placeholder}
+                        multiline
+                        numberOfLines={4}
+                        textAlignVertical="top"
+                        testID="details-input"
+                    />
+                </View>
+
+                {/* Date Section */}
+                <View style={styles.section}>
+                    <Pressable
+                        onPress={() => setShowDatePicker(true)}
+                        style={({ pressed }) => [
+                            styles.dateButton,
+                            pressed && { opacity: 0.7 },
+                        ]}
+                    >
+                        <Text style={styles.dateButtonText}>
+                            {formatDateForDisplay(crime.date)}
+                        </Text>
+                        <Ionicons name="calendar" style={styles.dateButtonIcon} />
+                    </Pressable>
+                </View>
+
+                {/* Solved Checkbox */}
+                <View style={styles.section}>
+                    <Pressable
+                        onPress={handleSolvedToggle}
+                        style={({ pressed }) => [
+                            styles.checkboxRow,
+                            pressed && { opacity: 0.7 },
+                        ]}
+                    >
+                        <View style={[styles.checkbox, crime.solved && styles.checkboxChecked]}>
+                            {crime.solved && (
+                                <Ionicons name="checkmark-circle" style={styles.checkmarkText} />
+                            )}
+                        </View>
+                        <Text style={styles.checkboxLabel}>Solved</Text>
+                    </Pressable>
+                </View>
+
+                {/* Save Button */}
+                <Pressable
+                    onPress={handleSave}
+                    disabled={isSaving || isDeleting}
+                    testID="save-button"
+                    style={({ pressed }) => [
+                        globalStyles.button,
+                        styles.saveButton,
+                        pressed && { opacity: 0.8 },
+                    ]}
+                >
+                    <Text style={globalStyles.buttonText}>
+                        {isSaving ? 'Saving...' : 'Save'}
+                    </Text>
+                </Pressable>
+
+                {/* Delete Button - Only show for existing crimes */}
+                {isExistingCrime && (
+                    <Pressable
+                        onPress={handleDelete}
+                        disabled={isSaving || isDeleting}
+                        style={({ pressed }) => [
+                            styles.deleteButton,
+                            pressed && { opacity: 0.8 },
+                        ]}
+                    >
+                        <Text style={styles.deleteButtonText}>
+                            {isDeleting ? 'Deleting...' : 'DELETE CRIME'}
+                        </Text>
+                    </Pressable>
+                )}
             </ScrollView>
 
-            {/* Date Picker Modal */}
-            <DatePickerModal
+            {/* Date Picker - Proper Modal */}
+            <Modal
                 visible={showDatePicker}
-                date={new Date(crime.date)}
-                onDateChange={handleDateChange}
-                onCancel={() => setShowDatePicker(false)}
-            />
+                transparent={true}
+                animationType="fade"
+                onRequestClose={() => setShowDatePicker(false)}
+            >
+                <View style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+                }}>
+                    <View style={{
+                        backgroundColor: theme.colors.surface,
+                        borderRadius: 12,
+                        padding: 20,
+                        margin: 20,
+                        width: '80%',
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 4 },
+                        shadowOpacity: 0.3,
+                        shadowRadius: 4,
+                        elevation: 8,
+                    }}>
+                        <Text style={{
+                            fontSize: 18,
+                            fontWeight: 'bold',
+                            color: theme.colors.text,
+                            textAlign: 'center',
+                            marginBottom: 20
+                        }}>
+                            Select Date
+                        </Text>
+                        
+                        <DateTimePicker
+                            value={new Date(crime.date)}
+                            mode="date"
+                            display="spinner"
+                            onChange={(event, selectedDate) => {
+                                if (selectedDate) {
+                                    setCrime(prev => ({ ...prev, date: selectedDate.toISOString() }));
+                                }
+                            }}
+                            style={{ backgroundColor: theme.colors.surface }}
+                        />
+                        
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            marginTop: 20
+                        }}>
+                            <Pressable
+                                onPress={() => setShowDatePicker(false)}
+                                style={{
+                                    paddingHorizontal: 20,
+                                    paddingVertical: 10,
+                                    borderRadius: 6,
+                                    backgroundColor: theme.colors.border
+                                }}
+                            >
+                                <Text style={{ color: theme.colors.text }}>Cancel</Text>
+                            </Pressable>
+                            
+                            <Pressable
+                                onPress={() => setShowDatePicker(false)}
+                                style={{
+                                    paddingHorizontal: 20,
+                                    paddingVertical: 10,
+                                    borderRadius: 6,
+                                    backgroundColor: theme.colors.primary
+                                }}
+                            >
+                                <Text style={{ color: '#FFFFFF', fontWeight: 'bold' }}>Done</Text>
+                            </Pressable>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 }
